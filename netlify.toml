@@ -1,0 +1,6 @@
+[build]
+  command = "astro build && npx pagefind --site dist"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
