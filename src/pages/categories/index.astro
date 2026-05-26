@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('posts', ({ data }) => !data.draft);
+
+const tagCounts = posts.reduce<Record<string, number>>((acc, post) => {
+  post.data.tags.forEach(tag => {
+    acc[tag] = (acc[tag] ?? 0) + 1;
+  });
+  return acc;
+}, {});
+
+const tags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
+---
+<BaseLayout title="Categories" description="Browse posts by topic">
+  <div class="container">
+    <section class="section">
+      <h1 class="page-title">カテゴリー / Categories</h1>
+      <div class="tag-grid">
+        {tags.map(([tag, count]) => (
+          <a href={`/categories/${tag}`} class="tag-card">
+            <span class="tag-card__dot" aria-hidden="true"></span>
+            <span class="tag-card__name">{tag}</span>
+            <span class="tag-card__count">{count}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-title {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .tag-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.75rem;
+  }
+  .tag-card {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1rem;
+    background: var(--paper);
+    border-radius: 12px;
+    border: 1px solid var(--rule);
+    text-decoration: none;
+    color: var(--ink);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .tag-card:hover {
+    border-color: var(--accent-blue);
+    box-shadow: var(--shadow);
+    text-decoration: none;
+  }
+  .tag-card__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-blue);
+    flex-shrink: 0;
+  }
+  .tag-card__name {
+    flex: 1;
+  }
+  .tag-card__count {
+    font-size: 0.75rem;
+    color: color-mix(in oklab, var(--ink) 45%, transparent);
+    font-weight: 400;
+  }
+</style>

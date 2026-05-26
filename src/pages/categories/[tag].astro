@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostGrid from '../../components/PostGrid.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  const tags = [...new Set(posts.flatMap(p => p.data.tags))];
+  return tags.map(tag => ({
+    params: { tag },
+    props: {
+      posts: posts
+        .filter(p => p.data.tags.includes(tag))
+        .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()),
+      tag,
+    },
+  }));
+}
+
+const { posts, tag } = Astro.props;
+---
+<BaseLayout title={`#${tag}`} description={`Posts tagged ${tag}`}>
+  <div class="container">
+    <section class="section">
+      <div class="tag-hero stripe-bg">
+        <p class="tag-hero__eyebrow">カテゴリー</p>
+        <h1 class="tag-hero__title">#{tag}</h1>
+        <p class="tag-hero__count">{posts.length} posts</p>
+      </div>
+      <PostGrid posts={posts} />
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .tag-hero {
+    padding: 2rem 0 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .tag-hero__eyebrow {
+    font-family: 'Caveat', cursive;
+    color: var(--accent-orange);
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+  }
+  .tag-hero__title {
+    font-size: 2.25rem;
+    font-weight: 800;
+  }
+  .tag-hero__count {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.85rem;
+    color: color-mix(in oklab, var(--ink) 50%, transparent);
+    margin-top: 0.3rem;
+  }
+</style>
