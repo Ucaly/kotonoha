@@ -1,0 +1,33 @@
+---
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p class="footer-copy">© {year} Kotonoha</p>
+    <p class="footer-tagline">ていねいに、やさしく。</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--rule);
+    padding: 2rem 0;
+    margin-top: 4rem;
+  }
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .footer-copy {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.8rem;
+    color: color-mix(in oklab, var(--ink) 45%, transparent);
+  }
+  .footer-tagline {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: color-mix(in oklab, var(--ink) 45%, transparent);
+  }
+</style>
