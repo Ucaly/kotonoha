@@ -1,0 +1,44 @@
+---
+import PostCard from './PostCard.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  featuredPost?: CollectionEntry<'posts'>;
+}
+const { featuredPost } = Astro.props;
+---
+<section class="hero stripe-bg">
+  <div class="hero__text">
+    <p class="hero__eyebrow">ことのは — leaves of words</p>
+    <h1 class="hero__heading">技術を、やさしく。<br/><em>Technology, gently.</em></h1>
+    <p class="hero__sub">
+      Web開発、ツール、デザインについて、家族みんなが読めるように書いています。<br/>
+      Writing about web dev, tools, and design — for everyone in the family.
+    </p>
+  </div>
+
+  {featuredPost && (
+    <div class="hero__featured">
+      <PostCard
+        id={featuredPost.id}
+        title={featuredPost.data.title}
+        titleEn={featuredPost.data.titleEn}
+        date={featuredPost.data.date}
+        tags={featuredPost.data.tags}
+        level={featuredPost.data.level}
+        readTime={featuredPost.data.readTime}
+        hero={featuredPost.data.hero}
+      />
+    </div>
+  )}
+</section>
+
+<style>
+  .hero {
+    padding: 3rem 0;
+  }
+  em {
+    font-style: italic;
+    color: var(--accent-orange);
+  }
+</style>
