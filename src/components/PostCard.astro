@@ -1,0 +1,65 @@
+---
+import TagBadge from './TagBadge.astro';
+
+interface Props {
+  id: string;
+  title: string;
+  titleEn: string;
+  date: Date;
+  tags: string[];
+  level: 'beginner' | 'intermediate' | 'advanced';
+  readTime: number;
+  hero?: string;
+}
+
+const { id, title, titleEn, date, tags, level, readTime, hero } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('ja-JP', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+---
+<article class="post-card">
+  {hero ? (
+    <img class="post-card__hero-img" src={hero} alt={titleEn} loading="lazy" />
+  ) : (
+    <div class="post-card__hero-img post-card__hero-placeholder" aria-hidden="true"></div>
+  )}
+
+  <div class="post-card__body">
+    <div class="post-card__meta">
+      <time datetime={date.toISOString()}>{formattedDate}</time>
+      <span aria-hidden="true">·</span>
+      <span>{readTime} min read</span>
+    </div>
+
+    <a href={`/posts/${id}`} class="post-card__title-link">
+      <h2 class="post-card__title">{title}</h2>
+      <p class="post-card__title-en">{titleEn}</p>
+    </a>
+
+    <div class="post-card__tags">
+      <TagBadge tag={level} level={level} />
+      {tags.slice(0, 2).map(tag => <TagBadge tag={tag} />)}
+    </div>
+  </div>
+</article>
+
+<style>
+  .post-card__hero-placeholder {
+    height: 120px;
+    background: linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--accent-blue) 15%, var(--paper)),
+      color-mix(in oklab, var(--accent-orange) 10%, var(--paper))
+    );
+  }
+  .post-card__title-link {
+    text-decoration: none;
+    display: block;
+  }
+  .post-card__title-link:hover .post-card__title {
+    color: var(--accent-blue);
+  }
+</style>
