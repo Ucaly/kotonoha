@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostGrid from '../../components/PostGrid.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('posts', ({ data }) => !data.draft);
+const sorted = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+<BaseLayout title="All Posts" description="すべての記事">
+  <div class="container">
+    <section class="section">
+      <h1 class="page-title">すべての記事 / All Posts</h1>
+      <PostGrid posts={sorted} />
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-title {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--rule);
+  }
+</style>
