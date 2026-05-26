@@ -1,0 +1,43 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+interface Props {
+  headings: Heading[];
+}
+const { headings } = Astro.props;
+const h2s = headings.filter(h => h.depth === 2);
+---
+{h2s.length > 0 && (
+  <nav class="toc" aria-label="Table of contents">
+    <p class="toc__title">Contents</p>
+    <ol class="toc__list">
+      {h2s.map(h => (
+        <li class="toc__item">
+          <a href={`#${h.slug}`}>{h.text}</a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+)}
+
+<script>
+  const links = document.querySelectorAll('.toc__item a');
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        const id = entry.target.id;
+        const link = document.querySelector(`.toc__item a[href="#${id}"]`);
+        if (entry.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          link?.classList.add('active');
+        }
+      });
+    },
+    { rootMargin: '0px 0px -60% 0px' }
+  );
+
+  document.querySelectorAll('article h2[id]').forEach(el => observer.observe(el));
+</script>
