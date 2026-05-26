@@ -1,0 +1,38 @@
+---
+title: CSSカスタムプロパティ入門
+titleEn: CSS Custom Properties for Theming
+date: 2026-05-15
+tags: [css, design, tips]
+level: intermediate
+readTime: 6
+draft: false
+---
+
+CSSカスタムプロパティ（変数）はテーマ切り替えの強力なツールです。
+
+CSS custom properties make dark mode and theming surprisingly simple.
+
+## Basic syntax
+
+```css
+:root {
+  --bg: #f6f1ea;
+  --ink: #1a2b40;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+}
+```
+
+## Dark mode in 3 lines
+
+```css
+html.dark {
+  --bg: #15212e;
+  --ink: #e8dfd4;
+}
+```
+
+Toggle a class on `<html>` and every element re-themes instantly — no JavaScript recalculation.
