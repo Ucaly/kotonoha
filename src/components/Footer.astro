@@ -1,10 +1,21 @@
 ---
 const year = new Date().getFullYear();
+import xIcon from "../assets/x_logo_icon_no_border.svg";
 ---
+
 <footer class="site-footer">
   <div class="container footer-inner">
     <p class="footer-copy">© {year} Kotonoha</p>
-    <p class="footer-tagline">ていねいに、やさしく。</p>
+    <div class="social-links">
+      <a
+        href="https://www.x.com/computer_mama"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img src={xIcon.src} alt="X" class="social-icon" />
+      </a>
+    </div>
+    <p class="footer-tagline">いっしょに学ぼう</p>
   </div>
 </footer>
 
@@ -19,15 +30,25 @@ const year = new Date().getFullYear();
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
+    height: 60px;
   }
   .footer-copy {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: "Plus Jakarta Sans", sans-serif;
     font-size: 0.8rem;
     color: color-mix(in oklab, var(--ink) 45%, transparent);
   }
   .footer-tagline {
-    font-family: 'Caveat', cursive;
+    font-family: "Caveat", cursive;
     font-size: 1rem;
     color: color-mix(in oklab, var(--ink) 45%, transparent);
+  }
+  .social-links {
+    display: flex;
+    items-align: center;
+    gap: 0.5rem;
+  }
+  .social-icon {
+    width: 1.25rem;
+    height: 1.25rem;
   }
 </style>
