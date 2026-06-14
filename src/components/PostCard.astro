@@ -1,37 +1,45 @@
 ---
-import TagBadge from './TagBadge.astro';
-
+import TagBadge from "./TagBadge.astro";
+import { Image } from "astro:assets";
 interface Props {
   id: string;
   title: string;
   titleEn: string;
   date: Date;
   tags: string[];
-  level: 'beginner' | 'intermediate' | 'advanced';
-  readTime: number;
-  hero?: string;
+  hero?: ImageMetadata | undefined;
 }
 
-const { id, title, titleEn, date, tags, level, readTime, hero } = Astro.props;
+const { id, title, titleEn, date, tags, hero } = Astro.props;
 
-const formattedDate = date.toLocaleDateString('ja-JP', {
-  year: 'numeric',
-  month: 'short',
-  day: 'numeric',
+const formattedDate = date.toLocaleDateString("ja-JP", {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
 });
 ---
+
 <article class="post-card">
-  {hero ? (
-    <img class="post-card__hero-img" src={hero} alt={titleEn} loading="lazy" />
-  ) : (
-    <div class="post-card__hero-img post-card__hero-placeholder" aria-hidden="true"></div>
-  )}
+  {
+    hero ? (
+      <Image
+        src={hero}
+        alt={titleEn}
+        class="post-card__hero-img"
+        loading="lazy"
+      />
+    ) : (
+      <div
+        class="post-card__hero-img post-card__hero-placeholder"
+        aria-hidden="true"
+      />
+    )
+  }
 
   <div class="post-card__body">
     <div class="post-card__meta">
       <time datetime={date.toISOString()}>{formattedDate}</time>
       <span aria-hidden="true">·</span>
-      <span>{readTime} min read</span>
     </div>
 
     <a href={`/posts/${id}`} class="post-card__title-link">
@@ -40,8 +48,7 @@ const formattedDate = date.toLocaleDateString('ja-JP', {
     </a>
 
     <div class="post-card__tags">
-      <TagBadge tag={level} level={level} />
-      {tags.slice(0, 2).map(tag => <TagBadge tag={tag} />)}
+      {tags.slice(0, 2).map((tag) => <TagBadge tag={tag} />)}
     </div>
   </div>
 </article>

@@ -1,12 +1,8 @@
 ---
 interface Props {
   tag: string;
-  level?: 'beginner' | 'intermediate' | 'advanced' | null;
 }
-const { tag, level = null } = Astro.props;
+const { tag } = Astro.props;
 ---
-{level ? (
-  <span class="tag-badge" data-level={level}>{level}</span>
-) : (
-  <a href={`/categories/${tag}`} class="tag-badge">{tag}</a>
-)}
+
+<a href={`/categories/${tag}`} class="tag-badge">{tag}</a>

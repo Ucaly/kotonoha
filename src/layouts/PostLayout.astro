@@ -1,27 +1,54 @@
 ---
-import BaseLayout from './BaseLayout.astro';
-import TagBadge from '../components/TagBadge.astro';
-import TOC from '../components/TOC.astro';
+import BaseLayout from "./BaseLayout.astro";
+import TagBadge from "../components/TagBadge.astro";
+import TOC from "../components/TOC.astro";
 
 interface Props {
   title: string;
   titleEn: string;
+  description?: string;
   date: Date;
   tags: string[];
-  level: 'beginner' | 'intermediate' | 'advanced';
-  readTime: number;
   headings: { depth: number; slug: string; text: string }[];
+  slug: string;
+  hero?: ImageMetadata;
 }
 
-const { title, titleEn, date, tags, level, readTime, headings } = Astro.props;
+const { title, titleEn, description, date, tags, headings, slug, hero } = Astro.props;
 
-const formattedDate = date.toLocaleDateString('ja-JP', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
+const formattedDate = date.toLocaleDateString("ja-JP", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
 });
+
+const postDescription = description ?? titleEn;
+const canonicalURL = new URL(`/posts/${slug}/`, Astro.site).href;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: title,
+  description: postDescription,
+  datePublished: date.toISOString(),
+  url: canonicalURL,
+  mainEntityOfPage: canonicalURL,
+  ...(hero && { image: new URL(hero.src, Astro.site).href }),
+  author: {
+    "@type": "Person",
+    name: "Kotonoha",
+  },
+};
 ---
-<BaseLayout title={title} description={titleEn}>
+
+<BaseLayout
+  title={title}
+  description={postDescription}
+  type="article"
+  publishedDate={date}
+  image={hero?.src}
+  jsonLd={jsonLd}
+>
   <div class="container">
     <div class="post-layout">
       <article>
@@ -38,10 +65,8 @@ const formattedDate = date.toLocaleDateString('ja-JP', {
           <div class="post-meta">
             <time datetime={date.toISOString()}>{formattedDate}</time>
             <span aria-hidden="true">·</span>
-            <span>{readTime} min read</span>
             <span aria-hidden="true">·</span>
-            <TagBadge tag={level} level={level} />
-            {tags.map(tag => <TagBadge tag={tag} />)}
+            {tags.map((tag) => <TagBadge tag={tag} />)}
           </div>
         </header>
 
@@ -64,7 +89,7 @@ const formattedDate = date.toLocaleDateString('ja-JP', {
     border-bottom: 1px solid var(--rule);
   }
   .breadcrumb {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: "Plus Jakarta Sans", sans-serif;
     font-size: 0.78rem;
     color: color-mix(in oklab, var(--ink) 50%, transparent);
     display: flex;
@@ -85,7 +110,7 @@ const formattedDate = date.toLocaleDateString('ja-JP', {
     margin-bottom: 0.4rem;
   }
   .post-title-en {
-    font-family: 'Lora', serif;
+    font-family: "Lora", serif;
     font-style: italic;
     font-size: 1.1rem;
     color: color-mix(in oklab, var(--ink) 60%, transparent);
@@ -96,7 +121,7 @@ const formattedDate = date.toLocaleDateString('ja-JP', {
     align-items: center;
     flex-wrap: wrap;
     gap: 0.5rem;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: "Plus Jakarta Sans", sans-serif;
     font-size: 0.8rem;
     color: color-mix(in oklab, var(--ink) 55%, transparent);
   }
